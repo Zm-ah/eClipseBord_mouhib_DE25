@@ -7,7 +7,7 @@ authors = [
     { name = "zineb mouhib", email = "zinebmouhib@hotmail.it" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = ["streamlit", "httpx"]
 
 [project.scripts]
 frontend = "frontend:main"
