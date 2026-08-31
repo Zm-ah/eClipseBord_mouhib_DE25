@@ -41,3 +41,23 @@ cd ..
 uv sync
 \`\`\`
 This resolved and locked dependencies for both packages into a single root `uv.lock`.
+
+
+
+
+
+### 6. Set up EDA
+Created a `notebook/` folder in the root (kept separate from `backend/` and `frontend/` so it isn't included in the Docker images) with `EDA.ipynb` for initial data exploration.
+
+Added `pandas` and `ipykernel` to the root workspace:
+\`\`\`bash
+uv add pandas
+uv add --dev ipykernel
+\`\`\`
+
+### 7. Data
+Placed the dataset(s) in a root-level `data/` folder, shared between the EDA notebook and the backend. Used a `DATA_PATH` variable to reference the files consistently:
+\`\`\`python
+DATA_PATH = "../data"
+df = pd.read_csv(f"{DATA_PATH}/<filename>.csv")
+\`\`\`
