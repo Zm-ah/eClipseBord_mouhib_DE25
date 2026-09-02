@@ -1,36 +1,46 @@
 import streamlit as st
 import httpx
 import pandas as pd
+import os 
 
-BACKEND_URL = "http://127.0.0.1:8000"
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(page_title="eClipseBord", layout="wide")
 
-st.title("🌘 eClipseBord")
+st.title("eClipseBord")
 st.write("Explore historical solar and lunar eclipse data")
-
-col1, col2 = st.columns([1, 3])
-with col1:
-    eclipse_type = st.selectbox("Choose eclipse type", ["lunar", "solar"])
 
 eclipse_images = {
     "solar": "https://images-assets.nasa.gov/image/GRC-2024-C-02639/GRC-2024-C-02639~orig.jpg",
     "lunar": "https://www.nasa.gov/wp-content/uploads/2025/03/grc-2025-c-01603orig.jpg",
 }
-col_left, col_center, col_right = st.columns([1, 2, 1])
-with col_center:
-    st.markdown(
-        f"""
-        <div style="text-align: center;">
-            <img src="{eclipse_images[eclipse_type]}"
-                 style="width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-            <p style="color: gray; font-size: 0.85rem; margin-top: 8px;">
-                {eclipse_type.capitalize()} eclipse (NASA)
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+
+col1, col2 = st.columns([1, 3])
+with col1:
+    eclipse_type = st.selectbox("Choose eclipse type", ["lunar", "solar"])
+
+
+st.markdown(
+    f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background-image:
+            linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)),
+            url("{eclipse_images[eclipse_type]}");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+    }}
+    h1, h2, h3, p, label, .stMarkdown {{
+        color: white !important;
+        text-shadow: 0px 1px 4px rgba(0,0,0,0.8);
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 
 response = httpx.get(f"{BACKEND_URL}/eclipses/{eclipse_type}")
