@@ -46,6 +46,7 @@ st.markdown(
 response = httpx.get(f"{BACKEND_URL}/eclipses/{eclipse_type}")
 data = response.json()
 df = pd.DataFrame(data)
+response = httpx.get(f"{BACKEND_URL}/eclipses/{eclipse_type}", timeout=30.0)
 
 tab1, tab2, tab3 = st.tabs(["Table", "Map", "Statistics"])
 
@@ -73,6 +74,7 @@ with tab2:
     map_data["Latitude"] = map_data["Latitude"].apply(parse_coordinate)
     map_data["Longitude"] = map_data["Longitude"].apply(parse_coordinate)
     map_data = map_data.dropna(subset=["Latitude", "Longitude"])
+    map_response = httpx.get(f"{BACKEND_URL}/eclipses/{eclipse_type}/map", timeout=30.0)
 
     color_map = {
         "T": "#c97b84",
@@ -132,6 +134,9 @@ with tab3:
     col1.metric("Total eclipses recorded", f"{total_eclipses:,}")
     col2.metric("Most common type", most_common_type)
     col3.metric("Share of total", f"{most_common_pct}%")
+
+
+    stats_response = httpx.get(f"{BACKEND_URL}/eclipses/{eclipse_type}/stats", timeout=30.0)
 
     st.write(
         f"Out of {total_eclipses:,} {eclipse_type} eclipses in this dataset, "
